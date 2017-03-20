@@ -51,7 +51,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public Dao<Telefon,Integer> getTelefonDao() throws SQLException {
         if (mKontaktDao == null) {
-            mKontaktDao = getDao(Kontakt.class);
+            mKontaktDao = getDao(Telefon.class);
         }
 
         return mKontaktDao;
@@ -59,7 +59,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public Dao<Kontakt,Integer> getKontaktDao() throws SQLException {
         if (mTelefonDao == null) {
-            mTelefonDao = getDao(Telefon.class);
+            mTelefonDao = getDao(Kontakt.class);
         }
 
         return mTelefonDao;

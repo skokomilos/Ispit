@@ -15,7 +15,7 @@ public class Telefon {
     public static final String FIELD_TELEFON_MOBILNI = "mobilni";
     public static final String FIELD_TELEFON_KUCNI = "kucni";
     public static final String FIELD_TELEFON_POSLOVNI = "poslovni";
-    public static final String FIELD_TELEFOn_KONTAKT = "kontakt";
+    public static final String FIELD_TELEFON_KONTAKT = "kontakt";
 
 
     @DatabaseField(columnName = FIELD_TELEFON_ID, generatedId = true)
@@ -30,7 +30,7 @@ public class Telefon {
     @DatabaseField(columnName = FIELD_TELEFON_POSLOVNI)
     private String poslovni;
 
-    @DatabaseField(columnName = FIELD_TELEFOn_KONTAKT, foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
+    @DatabaseField(columnName = FIELD_TELEFON_KONTAKT, foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
     private Kontakt kontakt;
 
 

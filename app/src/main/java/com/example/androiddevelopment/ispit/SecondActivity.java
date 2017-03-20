@@ -45,6 +45,10 @@ public class SecondActivity extends AppCompatActivity {
     public static String TOAST = "notif_toast";
     public static String NOTIFICATION = "notif_status";
 
+    private EditText ime;
+    private EditText prezime;
+    private EditText adresa;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,7 +86,7 @@ public class SecondActivity extends AppCompatActivity {
             final ListView listView = (ListView) findViewById(R.id.lv_spisakTelefona);
             final List<Telefon> list = getDatabaseHelper().getTelefonDao().queryBuilder()
                     .where()
-                    .eq(Telefon.FIELD_TELEFOn_KONTAKT, kontakt.getIdKontakta())
+                    .eq(Telefon.FIELD_TELEFON_KONTAKT, kontakt.getIdKontakta())
                     .query();
             final ListAdapter adapter = new ArrayAdapter<>(this, R.layout.list_item, list);
             listView.setAdapter(adapter);
@@ -153,6 +157,7 @@ public class SecondActivity extends AppCompatActivity {
                         f.setMobilni(mobilni.getText().toString());
                         f.setKucni(kucni.getText().toString());
                         f.setPoslovni(poslovni.getText().toString());
+                        f.setKontakt(kontakt);
 
                         try {
                             getDatabaseHelper().getTelefonDao().create(f);
@@ -161,6 +166,8 @@ public class SecondActivity extends AppCompatActivity {
                         } catch (SQLException e){
                             e.printStackTrace();
                         }
+                        refresh();
+                        showMessage("New added");
                         dialog.dismiss();
                     }
                 });
@@ -185,39 +192,21 @@ public class SecondActivity extends AppCompatActivity {
                 break;
             case R.id.action_edit:
 
-                // ovo sam ja malo komplikovao pa sam u dialogu citao trenutne vredenosti detalja glumca i onda ih menjao po potrebi
 
-                final Dialog dialog1 = new Dialog(this);
-                dialog1.setContentView(R.layout.dialog_kontakt);
-
-                final EditText ime = (EditText)dialog1.findViewById(R.id.et_ime);
-                final EditText prezime = (EditText)dialog1.findViewById(R.id.et_prezime);
-                final EditText adresa = (EditText)dialog1.findViewById(R.id.et_adresa);
+                kontakt.setImeKontakta(ime.getText().toString());
+                kontakt.setPrezimeKontakta(prezime.getText().toString());
+                kontakt.setAdresaKontakta(adresa.getEditableText().toString());
 
                 ime.setText(kontakt.getImeKontakta());
                 prezime.setText(kontakt.getPrezimeKontakta());
                 adresa.setText(kontakt.getAdresaKontakta());
 
-                Button oks = (Button)dialog1.findViewById(R.id.ok);
-                oks.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        try {
-                            kontakt.setImeKontakta(ime.getText().toString());
-                            kontakt.setPrezimeKontakta(prezime.getText().toString());
-                            kontakt.setAdresaKontakta(adresa.getText().toString());
-
-                            getDatabaseHelper().getKontaktDao().update(kontakt);
-                            showMessage("Izmenjeni podaci");
-                        } catch (SQLException e){
-                            e.printStackTrace();
-                        }
-                        //nisam pravio nov refresh za izmene, pa sam koristio onaj za glumce iz prvog aktivitija
-                        firstActivity.refresh();
-                        dialog1.dismiss();
-                    }
-                });
-                dialog1.show();
+                try{
+                    getDatabaseHelper().getKontaktDao().update(kontakt);
+                    showMessage("Kontakt detail updated");
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
                 break;
             // ovo sam radio jer nikako drugacije nisam mogao da implmentiram back dugme u SecondActivity
             case android.R.id.home:
@@ -239,7 +228,7 @@ public class SecondActivity extends AppCompatActivity {
                     adapter.clear();
                     List<Telefon> list = getDatabaseHelper().getTelefonDao().queryBuilder()
                             .where()
-                            .eq(Telefon.FIELD_TELEFOn_KONTAKT, kontakt.getIdKontakta())
+                            .eq(Telefon.FIELD_TELEFON_KONTAKT, kontakt.getIdKontakta())
                             .query();
                     adapter.addAll(list);
                     adapter.notifyDataSetChanged();
